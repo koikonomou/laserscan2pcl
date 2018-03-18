@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(laser2pcl)
+project(laserscan2pcl)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -203,8 +203,8 @@ include_directories(
 # catkin_add_nosetests(test)
 
 
-add_executable(laser2pc src/laser2pc.cpp)
-target_link_libraries(laser2pc ${catkin_LIBRARIES})
+#add_executable(laser2pc src/laser2pc.cpp)
+#target_link_libraries(laser2pc ${catkin_LIBRARIES})
 
 
 #add_executable(pclmap src/pclmap.cpp)
@@ -215,6 +215,6 @@ add_executable(pointcloud src/pointcloud.cpp)
 target_link_libraries(pointcloud ${catkin_LIBRARIES})
 #add_dependencies(pointcloud laser2pcl_generate_messages_cpp)
 
-add_executable(points src/points.cpp)
-target_link_libraries(points ${catkin_LIBRARIES})
+#add_executable(points src/points.cpp)
+#target_link_libraries(points ${catkin_LIBRARIES})
 
