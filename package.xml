@@ -2,7 +2,7 @@
 <package format="2">
   <name>laserscan2pcl</name>
   <version>0.0.0</version>
-  <description>The laser2pcl package</description>
+  <description>The laserscan2pcl package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
