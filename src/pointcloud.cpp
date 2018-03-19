@@ -1,12 +1,11 @@
 #include "ros/ros.h"
 #include "tf/transform_listener.h"
-#include "sensor_msgs/PointCloud2.h"
+#include "sensor_msgs/PointCloud.h"
 #include "tf/message_filter.h"
 #include "message_filters/subscriber.h"
 #include "laser_geometry/laser_geometry.h"
 
-class LaserScanToPointCloud2{
-
+class LaserScanToPointCloud{
 public:
 
   ros::NodeHandle node;
@@ -19,19 +18,19 @@ public:
 
 
 
-  LaserScanToPointCloud2(ros::NodeHandle n) : 
+  LaserScanToPointCloud(ros::NodeHandle n) : 
     node(n),
     laser_sub(node, "/scan", 10),
     laser_transform(laser_sub, tfListener, "base_link", 10)
   {
-    laser_transform.registerCallback(boost::bind(&LaserScanToPointCloud2::scanCallback, this, _1));
+    laser_transform.registerCallback(boost::bind(&LaserScanToPointCloud::scanCallback, this, _1));
     laser_transform.setTolerance(ros::Duration(0.01));
-    point_cloud_publisher = node.advertise<sensor_msgs::PointCloud2>("/pointcloud",1);
+    point_cloud_publisher = node.advertise<sensor_msgs::PointCloud>("/pointcloud",1);
 
   }
   void scanCallback (const sensor_msgs::LaserScan::ConstPtr& scan_in)
   {
-    sensor_msgs::PointCloud2 cloud;
+    sensor_msgs::PointCloud cloud;
     projector.transformLaserScanToPointCloud("base_link", *scan_in, cloud, tfListener, Distance );
     int Distance=5;
     projector.projectLaser(*scan_in, cloud);
@@ -47,7 +46,7 @@ int main(int argc, char** argv)
   
   ros::init(argc, argv, "my_scan_to_cloud");
   ros::NodeHandle n;
-  LaserScanToPointCloud2 lstopc(n);
+  LaserScanToPointCloud lstopc(n);
   
   ros::spin();
   
