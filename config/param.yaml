@@ -1,0 +1,3 @@
+cloud_topic: "/pointcloud2"
+output_cloud_topic: "/new_point_cloud"
+number_of_laserscans: 10
