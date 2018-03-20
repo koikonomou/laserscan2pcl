@@ -29,35 +29,17 @@ catkin_package(
 ## Build ##
 ###########
 
-## Specify additional locations of header files
-## Your package locations should be listed before other locations
 include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
 )
 
 
-#add_executable(laser2pc src/laser2pc.cpp)
-#target_link_libraries(laser2pc ${catkin_LIBRARIES})
-
-
-#add_executable(pclmap src/pclmap.cpp)
-#target_link_libraries(pclmap ${catkin_LIBRARIES})
-
-
 add_executable(pointcloud src/pointcloud.cpp)
 target_link_libraries(pointcloud ${catkin_LIBRARIES})
-#add_dependencies(pointcloud laser2pcl_generate_messages_cpp)
 
 add_executable(pointn src/pointn.cpp)
 target_link_libraries(pointn ${catkin_LIBRARIES})
-
-#add_executable(pointn src/pointn.cpp)
-#target_link_libraries(pointn ${catkin_LIBRARIES})
-
-#add_executable(pointxyz src/pointxyz.cpp)
-#target_link_libraries(pointxyz ${catkin_LIBRARIES})
-
 
 
 add_executable(points src/points.cpp)
