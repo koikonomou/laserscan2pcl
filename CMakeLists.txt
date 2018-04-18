@@ -18,16 +18,21 @@ find_package(catkin REQUIRED COMPONENTS
   pcl_ros
 )
 
-catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES laser2pcl
-#  CATKIN_DEPENDS message_filters laser_geometry roscpp rospy sensor_msgs std_msgs tf
-#  DEPENDS system_lib
-)
+find_package(PCL 1.8 REQUIRED)
+include_directories(${PCL_INCLUDE_DIRS})
+link_directories(${PCL_LIBRARY_DIRS})
+add_definitions(${PCL_DEFINITIONS})
+
+
+
+
+catkin_package()
+
 
 ###########
 ## Build ##
 ###########
+
 
 include_directories(
 # include
@@ -44,4 +49,8 @@ target_link_libraries(pointn ${catkin_LIBRARIES})
 
 add_executable(points src/points.cpp)
 target_link_libraries(points ${catkin_LIBRARIES})
+
+add_executable(laserscan_topcl src/laserscan_topcl.cpp)
+target_link_libraries(laserscan_topcl ${catkin_LIBRARIES})
+
 
