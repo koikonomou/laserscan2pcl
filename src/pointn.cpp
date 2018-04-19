@@ -74,7 +74,7 @@ int main (int argc, char** argv){
 	std::string topic;
 	std::string out_topic;
 	n_.param("new_point_pointmsg/offset", off_set, 1.0);
-	n_.param("new_point_pointmsg/offset", size, 40);
+	n_.param("new_point_pointmsg/size", size, 40);
 	n_.param("new_point_pointmsg/cloud_topic", topic, std::string("/pointcloud2"));
 	n_.param("new_point_pointmsg/output_cloud_topic", out_topic, std::string("/new_point_cloud"));
 
