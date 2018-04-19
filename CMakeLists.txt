@@ -10,6 +10,7 @@ project(laserscan2pcl)
 find_package(catkin REQUIRED COMPONENTS
   message_filters
   laser_geometry
+  my_new_msgs
   roscpp
   rospy
   sensor_msgs
