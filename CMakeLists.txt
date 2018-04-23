@@ -57,4 +57,10 @@ target_link_libraries(laserscan_topcl ${catkin_LIBRARIES})
 add_executable(pointcloud_layers src/pointcloud_layers.cpp)
 target_link_libraries(pointcloud_layers ${catkin_LIBRARIES})
 
+add_executable(layers src/layers.cpp)
+target_link_libraries(layers ${catkin_LIBRARIES})
+
+
+
+
 
