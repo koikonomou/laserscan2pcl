@@ -32,28 +32,27 @@ void callback(const my_new_msgs::clustering& msg){
 
     sensor_msgs::PointCloud oldFirst;
 
-    if(vec_.size() > 1){
+    if (vec_.size() > 1){
         oldFirst = sensor_msgs::PointCloud(vec_[0]);
     }
     if (vec_.size() > size){
         vec_.erase(vec_.begin());
     }
 
-    for(unsigned j=0; j < vec_.size(); j++){
+
+    for (unsigned j=0; j < vec_.size(); j++){
+        float tmp = vec_[j].points[0].z;
+
         if (j > 0){
-            for(size_t k=0; k < vec_[j].points.size(); k++) {
-                if (vec_[j].points[k+1].z > vec_[j].points[k].z ){
-                    if (vec_[j].points[0].z > vec_[j-1].points[0].z){
-                        vec_[j].points[k].z = vec_[j-1].points[k].z + ros::Duration( vec_[j].header.stamp - vec_[j-1].header.stamp).toSec() * msg.factor ;
-                        ROS_WARN ("1");
-                        // ROS_WARN("%u", vec_[j].points.size() == vec_[j-1].points.size());
-                    }
-                }
+            vec_[j].points[0].z = vec_[j-1].points[0].z + ros::Duration( vec_[j].header.stamp - vec_[j-1].header.stamp).toSec() * msg.factor;
+            for (size_t k=1; k < vec_[j].points.size(); k++) {
+                vec_[j].points[k].z += vec_[j].points[0].z - tmp;
+
             }
         }
-        else if(oldFirst.points.size() > 0){
-            for(size_t k=0; k < vec_[j].points.size(); k++) {
-                vec_[j].points[k].z -= oldFirst.points[0].z;
+        else if (oldFirst.points.size() > 0){
+            for (size_t k=0; k < vec_[j].points.size(); k++) {
+                vec_[j].points[k].z -= oldFirst.points[0].z + tmp;
             }
         }
         sensor_msgs::PointCloud2 pc2;
