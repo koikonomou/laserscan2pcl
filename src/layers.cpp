@@ -16,52 +16,63 @@
 
 
 int size;
+float offset;
 ros::Publisher pub;
-ros::Time prev_time, time_now;
-std::vector<sensor_msgs::PointCloud> vec_;
+
+// std::vector<sensor_msgs::PointCloud> v;
+std::vector<my_new_msgs::clustering> vec_;
 
 void callback(const my_new_msgs::clustering& msg){
 
     sensor_msgs::PointCloud cloud;
     my_new_msgs::clustering c_;
 
-    if (msg.clusters.size() > 0){
-        sensor_msgs::convertPointCloud2ToPointCloud( msg.clusters[0] , cloud );
-        vec_.push_back(cloud);
-    }
+    vec_.push_back(msg);
 
-    sensor_msgs::PointCloud oldFirst;
-
-    if (vec_.size() > 1){
-        oldFirst = sensor_msgs::PointCloud(vec_[0]);
-    }
     if (vec_.size() > size){
         vec_.erase(vec_.begin());
     }
 
+    for (unsigned i=0; vec_.size(); i++){
+        offset = ros::Duration( vec_[i].header.stamp - vec_[i-1].header.stamp).toSec() * msg.factor;
 
-    for (unsigned j=0; j < vec_.size(); j++){
-        float tmp = vec_[j].points[0].z;
+        for (unsigned j=0; vec_[i].clusters.size(); j++){
+            sensor_msgs::PointCloud cloud;
+            sensor_msgs::convertPointCloud2ToPointCloud( vec_[i].clusters[j] , cloud);
 
-        if (j > 0){
-            vec_[j].points[0].z = vec_[j-1].points[0].z + ros::Duration( vec_[j].header.stamp - vec_[j-1].header.stamp).toSec() * msg.factor;
-            for (size_t k=1; k < vec_[j].points.size(); k++) {
-                vec_[j].points[k].z += vec_[j].points[0].z - tmp;
+            // v.push_back(cloud);
 
+            // sensor_msgs::PointCloud oldFirst;
+            for (unsigned k=0; k < cloud.points.size(); k++){
+                cloud.points[k].z = cloud.points[k-1].z + offset;
             }
+            sensor_msgs::PointCloud2 pc2;
+            sensor_msgs::convertPointCloudToPointCloud2( cloud , pc2 );
+            c_.clusters.push_back(pc2);
         }
-        else if (oldFirst.points.size() > 0){
-            for (size_t k=0; k < vec_[j].points.size(); k++) {
-                vec_[j].points[k].z -= oldFirst.points[0].z + tmp;
-            }
-        }
-        sensor_msgs::PointCloud2 pc2;
-        sensor_msgs::convertPointCloudToPointCloud2( vec_[j] , pc2 );
-        c_.clusters.push_back(pc2);
+       pub.publish(c_);
     }
-    pub.publish(c_);
-
 }
+
+            // oldFirst = sensor_msgs::PointCloud(v[0]);
+            // if (v.size() > 1){
+            // }
+
+            // for (unsigned j = 0; j < v.size() ; j++){
+            //     float tmp = v[j].points[0].z ;
+
+            //     if (j>0) {
+            //         v[j].points[0].z = v[j-1].points[0].z + offset ;
+            //         for (size_t k=1; k < v[j].points.size(); k++) {
+            //                 v[j].points[k].z += v[j].points[0].z - tmp;
+            //         }
+            //     }
+            //     else if (oldFirst.points.size() > 0){
+            //         for (size_t k=0; k < v[j].points.size(); k++) {
+            //             v[j].points[k].z -= oldFirst.points[0].z + tmp;
+            //         }
+            //     }
+        //     }
 
 
 
@@ -70,7 +81,7 @@ int main (int argc, char** argv){
     ros::NodeHandle n_;
     n_.param("pointcloud_layers/size", size , 4);
 
-    ros::Subscriber sub = n_.subscribe("my_pointcloud", 1 , callback);
+    ros::Subscriber sub = n_.subscribe("/new_pcl", 1 , callback);
     pub = n_.advertise<my_new_msgs::clustering>("pointcloudlayers", 1);
     ros::spin ();
 }
