@@ -18,7 +18,7 @@
 class LaserScanToPointCloud2{
 
 public:
-  int size, overlap, cnt;
+  int size, overlap, cnt, num_scans;
   double factor;
   ros::Publisher pub;
   ros::NodeHandle node;
@@ -48,10 +48,11 @@ public:
 
       // boost::chrono::system_clock::time_point before = boost::chrono::system_clock::now(); 
       if (j > 0){
-        for(size_t i=0; i < v_[j].points.size(); i++) {
+        for(size_t i=0; i < v_.at(j).points.size(); i++) {
           v_.at(j).points[i].z = v_.at(j-1).points[0].z + ros::Duration(v_.at(j).header.stamp - v_.at(j-1).header.stamp).toSec() * factor;
         }
       }
+
       // boost::chrono::system_clock::time_point now = boost::chrono::system_clock::now();
 
       sensor_msgs::PointCloud2 pc2;
@@ -66,6 +67,7 @@ public:
       c.factor = factor;
       c.overlap = overlap ;
       c.first_stamp = v_.at(0).header.stamp;
+      c.num_scans = num_scans ;
 
     return c;
   }
@@ -87,6 +89,7 @@ public:
         v.erase(v.begin(), v.begin() + overlap);
       }
       pub.publish(bufferToAccumulator(v));
+      num_scans = cnt ;
       cnt = 0;
     }
 
@@ -102,7 +105,7 @@ int main(int argc, char** argv){
 
   n.param("my_scan_to_cloud/size", lstopc.size, 40);
   n.param("my_scan_to_cloud/factor", lstopc.factor, 5.0);
-  n.param("my_scan_to_cloud/overlap", lstopc.overlap, 10);
+  n.param("my_scan_to_cloud/overlap", lstopc.overlap, 35);
 
   ros::spin();
   
