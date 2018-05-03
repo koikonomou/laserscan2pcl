@@ -1,0 +1,5 @@
+input_topic: /scan
+out_topic: /my_pointcloud
+size: 40
+factor: 5.0
+overlap: 35
