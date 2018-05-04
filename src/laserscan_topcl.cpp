@@ -24,8 +24,8 @@ public:
   ros::NodeHandle node;
   std::deque<sensor_msgs::PointCloud> v;
 
-  std::string out_topic;
-  std::string input_topic;
+  // std::string out_topic;
+  // std::string input_topic;
 
   laser_geometry::LaserProjection projector;
   message_filters::Subscriber<sensor_msgs::LaserScan> laser_sub;
@@ -35,12 +35,12 @@ public:
 
   LaserScanToPointCloud2(ros::NodeHandle n) :
     node(n),
-    laser_sub(node, input_topic, 10),
+    laser_sub(node, "/scan", 10),
     laser_transform(laser_sub, tfListener, "base_link", 10)
   {
     laser_transform.registerCallback(boost::bind(&LaserScanToPointCloud2::scanCallback, this, _1));
     laser_transform.setTolerance(ros::Duration(0.01));
-    pub = node.advertise<my_new_msgs::clustering> (out_topic, 1);
+    pub = node.advertise<my_new_msgs::clustering> ("/my_pointcloud", 1);
     cnt = 0;
   }
 
@@ -110,8 +110,8 @@ int main(int argc, char** argv){
   n.param("laserscan_topcl/size", lstopc.size, 40);
   n.param("laserscan_topcl/factor", lstopc.factor, 5.0);
   n.param("laserscan_topcl/overlap", lstopc.overlap, 35);
-  n.param("laserscan_topcl/input_topic", lstopc.input_topic, std::string("/scan"));
-  n.param("laserscan_topcl/out_topic", lstopc.out_topic, std::string("/my_pointcloud"));
+  // n.param("laserscan_topcl/input_topic", lstopc.input_topic, std::string("/scan"));
+  // n.param("laserscan_topcl/out_topic", lstopc.out_topic, std::string("/my_pointcloud"));
 
 
   ros::spin();

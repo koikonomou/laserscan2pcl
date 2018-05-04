@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <launch>
-    <node pkg="laserscan_topcl" type="laserscan_topcl" respawn="false" name="laserscan_topcl" output="screen">
+    <node pkg="laserscan2pcl" type="laserscan_topcl" respawn="false" name="laserscan_topcl" output="screen">
         <rosparam file="$(find laserscan_topcl)/config/laserscan_topcl.yaml" command="load" />
     </node>
 </launch>
